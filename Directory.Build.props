@@ -1,0 +1,21 @@
+<Project>
+	<PropertyGroup>
+		<LegalAuthor>LuzFaltex Contributors</LegalAuthor>
+		<LegalEmail>support@luzfaltex.com</LegalEmail>
+		<Company>LuzFaltex, LLC.</Company>
+		<LegalCopyrightHolder>LuzFaltex, LLC.</LegalCopyrightHolder>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<SolutionDir>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)/))</SolutionDir>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<RepositoryBranch>main</RepositoryBranch>
+		<RepositoryUrl>https://github.com/ravenrockrp/LuzFaltex.Permissions</RepositoryUrl>
+
+		<PackageProjectUrl>https://github.com/ravenrockrp/LuzFaltex.Permissions</PackageProjectUrl>
+		<PackageOutputPath>$(SolutionDir)/nuget</PackageOutputPath>
+		<PackageTags>Obsidian;Minecraft;Plugin;Permissions</PackageTags>
+	</PropertyGroup>
+</Project>
