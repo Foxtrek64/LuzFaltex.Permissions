@@ -20,16 +20,19 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+using System;
+using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
+using LuzFaltex.Permissions.Notifications;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using Obsidian.API;
 using Obsidian.API.Events;
 using Obsidian.API.Plugins;
 using Obsidian.API.Plugins.Services;
 
-#pragma warning disable SA1206
-
-#if NETSTANDARD || NET6_0
+#if NET6_0
 #pragma warning disable CA2252 // False positive error. Feature is already enabled, but the analyzer does not detect this on .NET 6 and earlier.
 #endif
 
@@ -52,5 +55,44 @@ namespace LuzFaltex.Permissions
         /// Gets a logger for this instance.
         /// </summary>
         [Inject] public ILogger Logger { private get; init; } = default!;
+
+        private readonly IServiceProvider _serviceProvider;
+
+        private readonly IMediator _mediator;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PermissionsPlugin"/> class.
+        /// </summary>
+        public PermissionsPlugin()
+        {
+            var serviceCollection = new ServiceCollection()
+                .AddMediatR(cfg =>
+                {
+                    cfg.RegisterServicesFromAssembly(typeof(PermissionsPlugin).Assembly);
+                });
+            _serviceProvider = serviceCollection.BuildServiceProvider();
+            _mediator = _serviceProvider.GetRequiredService<IMediator>();
+        }
+
+        /// <summary>
+        /// Called when the plugin loads for the first time.
+        /// </summary>
+        /// <param name="server">The server instance that is starting this plugin.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public Task OnLoad(IServer server)
+        {
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Called when a client sends a chat message to the server.
+        /// </summary>
+        /// <param name="incomingChatMessageEventArgs">The event to publish as a notification.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task OnIncomingChatMessage(IncomingChatMessageEventArgs incomingChatMessageEventArgs)
+        {
+            var cts = new CancellationTokenSource();
+            await _mediator.Publish(new MessageCreateNotification(incomingChatMessageEventArgs, cts), cts.Token);
+        }
     }
 }

@@ -1,5 +1,5 @@
 ﻿//
-//  MessageCreateNotification.cs
+//  IServerEventNotification.cs
 //
 //  Author:
 //       LuzFaltex Contributors <support@luzfaltex.com>
@@ -20,24 +20,26 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-using System.Threading;
+using MediatR;
 using Obsidian.API.Events;
 
 namespace LuzFaltex.Permissions.Notifications
 {
     /// <summary>
-    /// Defines an incoming chat message notification.
+    /// Defines a notification which represents an event in Minecraft.
     /// </summary>
-    /// <param name="Event">The information regarding the incoming chat message.</param>
-    /// <param name="CancellationTokenSource">The <see cref="CancellationTokenSource"/> responsible for contianing the <see cref="CancellationToken"/> for this operation.</param>
-    public sealed record class MessageCreateNotification(IncomingChatMessageEventArgs Event, CancellationTokenSource CancellationTokenSource) : IServerEventNotification<IncomingChatMessageEventArgs>
+    /// <typeparam name="TMinecraftEvent">The type of event.</typeparam>
+    public interface IServerEventNotification<TMinecraftEvent> : INotification
+        where TMinecraftEvent : BaseMinecraftEventArgs
     {
-        private CancellationTokenSource CancellationTokenSource { get; } = CancellationTokenSource;
+        /// <summary>
+        /// Gets the event that was reported.
+        /// </summary>
+        public TMinecraftEvent Event { get; }
 
-        /// <inheritdoc/>
-        public void Cancel()
-        {
-            CancellationTokenSource.Cancel();
-        }
+        /// <summary>
+        /// Called when the event is cancelled.
+        /// </summary>
+        public void Cancel();
     }
 }

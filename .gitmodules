@@ -1,0 +1,4 @@
+
+[submodule "ServerFiles"]
+	path = .\\src\\LuzFaltex.Permissions\\ServerFiles
+	url = https://github.com/ObsidianMC/Obsidian
