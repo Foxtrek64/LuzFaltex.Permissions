@@ -32,10 +32,6 @@ using Obsidian.API.Events;
 using Obsidian.API.Plugins;
 using Obsidian.API.Plugins.Services;
 
-#if NET6_0
-#pragma warning disable CA2252 // False positive error. Feature is already enabled, but the analyzer does not detect this on .NET 6 and earlier.
-#endif
-
 namespace LuzFaltex.Permissions
 {
     /// <summary>
